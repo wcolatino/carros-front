@@ -1,1 +1,45 @@
-<p>carroslist works!</p>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="direita">
+                        <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init
+                            routerLink="/admin/carros/new">
+                            Novo
+                        </button>
+                    </div>
+                    <br>
+                    <table class="table" border="1">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Nome</th>
+                                <th scope="col"></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (carro of lista; track $index) {
+                            <tr>
+                                <td>{{carro.id}}</td>
+                                <td>{{carro.nome}}</td>
+                                <td class="direita">
+                                    <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init
+                                        routerLink="/admin/carros/edit/{{carro.id}}">Editar</button>
+                                    <button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init
+                                        (click)="deletar()">Deletar</button>
+
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
