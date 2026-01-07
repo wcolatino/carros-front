@@ -6,10 +6,16 @@
             <div class="card">
                 <div class="card-body">
                     <div class="direita">
+
+                         <button type="button" class="btn btn-primary btn-rounded" mdbRipple (click)="new()">
+                            Novo
+                        </button>
+                        <!--
                         <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init
                             routerLink="/admin/carros/new">
                             Novo
                         </button>
+                        -->
                     </div>
                     <br>
                     <table class="table" border="1">
@@ -27,8 +33,7 @@
                                 <td>{{carro.id}}</td>
                                 <td>{{carro.nome}}</td>
                                 <td class="direita">
-                                    <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init
-                                        routerLink="/admin/carros/edit/{{carro.id}}">Editar</button>
+                                    <button type="button" class="btn btn-primary btn-rounded" mdbRipple (click)="edit(carro)">Editar</button>
                                     <button type="button" class="btn btn-danger btn-rounded" data-mdb-ripple-init
                                         (click)="deleteById(carro)">Deletar</button>
 
@@ -43,3 +48,16 @@
 
         </div>
     </div>
+
+    <ng-template #modalCaroDetalhe>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cadastro</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.close()"></button>
+    </div>
+    <div class="modal-body">
+        <app-carrosdetails [carro]="carroEdit" (retorno)="retornoDetalhe($event)"> <!--Proeprty binding - pega o carro do carroDetails e passa par ao carroEdit-->
+        </app-carrosdetails> <!--Event Binding - pega o retorno do @Output -->
+    </div>
+    
+    </ng-template>
+    
