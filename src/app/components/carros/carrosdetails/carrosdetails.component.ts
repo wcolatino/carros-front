@@ -16,7 +16,7 @@ import { CarroService } from '../../../services/carro.service';
 export class CarrosdetailsComponent {
 
   @Input("carro")
-  carro: Carro = new Carro(0, "");
+  carro: Carro = new Carro(null, "");
   router = inject(ActivatedRoute); // Router para pegar parâmetro de rota
   @Output("retorno")
   retorno = new EventEmitter<any>();
@@ -27,7 +27,7 @@ export class CarrosdetailsComponent {
   constructor() {
     //Analisar na rota se há ID, se houver faz findById
     let id = this.router.snapshot.params['id'];
-    if (id > 0) {
+    if (id != null) {
       this.findById(id);
     }
   }
@@ -57,7 +57,7 @@ export class CarrosdetailsComponent {
             confirmButtonText: 'Ok'
           });
           this.router2.navigate(['admin/carros'], { state: { carroEditado: this.carro } }); //Após salvar com sucesso, redireciona para a rota de carros e envia o carroNovo salvo
-          this.retorno.emit(this.carro); //Emitter devolve o carro após salva rou editar
+          this.retorno.emit(this.carro); //Emitter devolve o carro após salva rou editar - serve para fechar a modal após finalizar
         }, error: erro => {
           Swal.fire({
             title: 'Ocoreu um erro',

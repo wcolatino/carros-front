@@ -88,15 +88,7 @@ export class CarroslistComponent {
   }
 
   retornoDetalhe(carro: Carro) {
-
-    if (carro.id > 0) { //Retorna o objeto par ao indice da lista, em caso de edição
-      let indice = this.lista.findIndex(x => { return x.id == carro.id }); //pega o indice do caro editado
-      this.lista[indice] = carro;
-    } else { // Se for car novo , somene posta na lsita
-      carro.id = 55;
-      this.lista.push(carro);
-    }
-
+    this.listAll();
     this.modalRef.close(); //fecha a modal
   }
 
