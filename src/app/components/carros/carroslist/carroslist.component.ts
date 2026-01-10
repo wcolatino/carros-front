@@ -37,8 +37,11 @@ export class CarroslistComponent {
     this.carroService.listAll().subscribe({ //Subscribe espera uma resposta
       next: lista => { //Quando back retornar o que se espera
         this.lista = lista //A lista de carros recebe a lista vinda da services
-      }, error(err) { //Quando retornar qualquer erro
-        console.log('OCorreu algum erro!')
+      }, error: erro => { //Quando retornar qualquer erro
+        Swal.fire({
+          title: 'Ocoreu um erro',
+          icon: "error"
+        });
       }
     });
   }

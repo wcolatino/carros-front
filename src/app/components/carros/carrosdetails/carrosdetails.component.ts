@@ -4,6 +4,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { Carro } from '../../../models/carro';
 import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
+import { CarroService } from '../../../services/carro.service';
 
 @Component({
   selector: 'app-carrosdetails',
@@ -14,45 +15,82 @@ import Swal from 'sweetalert2';
 })
 export class CarrosdetailsComponent {
 
-  @Input("carro") 
+  @Input("carro")
   carro: Carro = new Carro(0, "");
   router = inject(ActivatedRoute); // Router para pegar parâmetro de rota
-  @Output("retorno") 
+  @Output("retorno")
   retorno = new EventEmitter<any>();
   router2 = inject(Router); // Router de redirecionamento
 
-  constructor() { // NO construtor - acessar a variável de rota
+  carroService = inject(CarroService);
+
+  constructor() {
+    //Analisar na rota se há ID, se houver faz findById
     let id = this.router.snapshot.params['id'];
     if (id > 0) {
       this.findById(id);
     }
   }
 
+  findById(id: number) {
+
+    this.carroService.findById(id).subscribe({
+      next: retorno => {
+        this.carro = retorno;
+      }, error: erro => {
+        Swal.fire({
+          title: 'Ocoreu um erro',
+          icon: "error"
+        });
+      }
+    });
+  }
+
   save() {
     if (this.carro.id > 0) { //Se o Id foi maior que zero, é atualização
-      Swal.fire({
-        text: "Editado com sucesso!",
-        icon: "success",
-        confirmButtonText: 'Ok'
+
+      this.carroService.update(this.carro, this.carro.id).subscribe({
+        next: mensagem => {
+          Swal.fire({
+            text: mensagem,
+            icon: "success",
+            confirmButtonText: 'Ok'
+          });
+          this.router2.navigate(['admin/carros'], { state: { carroEditado: this.carro } }); //Após salvar com sucesso, redireciona para a rota de carros e envia o carroNovo salvo
+          this.retorno.emit(this.carro); //Emitter devolve o carro após salva rou editar
+        }, error: erro => {
+          Swal.fire({
+            title: 'Ocoreu um erro',
+            icon: "error"
+          });
+        }
       });
-      
-      this.router2.navigate(['admin/carros'], { state: { carroEditado: this.carro } }); //Após salvar com sucesso, redireciona para a rota de carros e envia o carroNovo salvo
-    } else {
-      Swal.fire({
-        text: "Salvo com sucesso!",
-        icon: "success",
-        confirmButtonText: 'Ok'
+
+
+
+    } else { //SALVAR
+      this.carroService.save(this.carro).subscribe({
+        next: mensagem => {
+          Swal.fire({
+            text: mensagem,
+            icon: "success",
+            confirmButtonText: 'Ok'
+          });
+        }, error: erro => {
+          Swal.fire({
+            title: 'Ocoreu um erro ao salvar o carro',
+            icon: "error"
+          });
+        }
       });
+
+
       this.router2.navigate(['admin/carros'], { state: { carroNovo: this.carro } }); //Após salvar com sucesso, redireciona para a rota de carros e envia o carroNovo salvo
+      this.retorno.emit(this.carro); //Emitter devolve o carro após salva rou editar
     }
 
-    this.retorno.emit(this.carro); //Emitter devolve o carro após salva rou editar
   }
 
-  findById(id: number) {
-    //Busca no back-end
-    let carroRetornado: Carro = new Carro(id, "Fiesta");
-    this.carro = carroRetornado;
-  }
+
 
 }

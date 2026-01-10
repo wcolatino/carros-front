@@ -21,4 +21,17 @@ export class CarroService {
   delete (id: number): Observable<string>{ 
     return this.http.delete<string>(this.API+"/delete/"+id, {responseType: 'text' as 'json'}); //Sempre que o retorno for String, deve-se colcoar o responsetype;
   }
+
+  save (carro: Carro): Observable<string>{ // O Carro entra no body da requisição
+    return this.http.post<string>(this.API+"/save", carro, {responseType: 'text' as 'json'}); //Sempre que o retorno for String, deve-se colocar o responsetype;
+  }
+
+   update (carro: Carro, id: number): Observable<string>{ // O Carro e o id entra no body da requisição
+    return this.http.put<string>(this.API+"/update/"+id, carro, {responseType: 'text' as 'json'}); //Sempre que o retorno for String, deve-se colocar o responsetype;
+  }
+
+   findById (id: number): Observable<Carro>{ // O Carro e o id entra no body da requisição
+    return this.http.get<Carro>(this.API+"/findById/"+id); //Sempre que o retorno for String, deve-se colocar o responsetype;
+  }
 }
+
