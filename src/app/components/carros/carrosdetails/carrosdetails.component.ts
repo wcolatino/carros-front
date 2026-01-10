@@ -17,7 +17,9 @@ export class CarrosdetailsComponent {
 
   @Input("carro")
   carro: Carro = new Carro(null, "");
+
   router = inject(ActivatedRoute); // Router para pegar parâmetro de rota
+  
   @Output("retorno")
   retorno = new EventEmitter<any>();
   router2 = inject(Router); // Router de redirecionamento

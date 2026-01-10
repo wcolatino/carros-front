@@ -27,16 +27,14 @@ export class CarroslistComponent {
   carroService = inject(CarroService);
 
   constructor() {
-
-    //Pega o carro editado ou cadastrado
     this.listAll();
-
   }
 
   listAll() {
     this.carroService.listAll().subscribe({ //Subscribe espera uma resposta
       next: lista => { //Quando back retornar o que se espera
-        this.lista = lista //A lista de carros recebe a lista vinda da services
+        this.lista = lista; //A lista de carros recebe a lista vinda da services
+
       }, error: erro => { //Quando retornar qualquer erro
         Swal.fire({
           title: 'Ocoreu um erro',
