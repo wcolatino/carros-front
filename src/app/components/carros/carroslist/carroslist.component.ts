@@ -5,6 +5,7 @@ import { MdbModalModule, MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit
 
 import Swal from 'sweetalert2';
 import { CarrosdetailsComponent } from "../carrosdetails/carrosdetails.component";
+import { CarroService } from '../../../services/carro.service';
 
 @Component({
   selector: 'app-carroslist',
@@ -23,34 +24,23 @@ export class CarroslistComponent {
   @ViewChild('modalCaroDetalhe') modalCaroDetalhe!: TemplateRef<any>; //Referencia do template da modal no HTML
   modalRef!: MdbModalRef<any>; //Referência da modal para conseguirmos fechar depois
 
+  carroService = inject(CarroService);
+
   constructor() {
 
     //Pega o carro editado ou cadastrado
+    this.listAll();
 
+  }
 
-    //Cria a lista
-    this.lista.push(new Carro(1, 'Fiesta'));
-    this.lista.push(new Carro(2, 'Monza'));
-    this.lista.push(new Carro(3, 'Ka'));
-
-    //Verifica no estado se é novo ou editado
-    let carroNovo = history.state.carroNovo;
-    let carroEditado = history.state.carroEditado;
-
-    //Se for novo, acidiona na lista com novo Id
-    if (carroNovo) {
-      carroNovo.id = 555
-      this.lista.push(carroNovo) //Insere novo na lista e pronto
-    }
-
-    //Se for editado, pega o indice do carro editado e devolte com os dados editatos
-    if (carroEditado) {
-      let indice = this.lista.findIndex(x => { return x.id == carroEditado.id }); //pega o indice do caro editado - Altera o objeto mas permanece no index da lista
-      this.lista[indice] = carroEditado; //Devolve o carro editado
-    }
-
-
-
+  listAll() {
+    this.carroService.listAll().subscribe({ //Subscribe espera uma resposta
+      next: lista => { //Quando back retornar o que se espera
+        this.lista = lista //A lista de carros recebe a lista vinda da services
+      }, error(err) { //Quando retornar qualquer erro
+        console.log('OCorreu algum erro!')
+      }
+    });
   }
 
   deleteById(carro: Carro) {
@@ -65,13 +55,21 @@ export class CarroslistComponent {
     }).then((result) => {
       if (result.isConfirmed) {
 
-        let indice = this.lista.findIndex(x => { return x.id == carro.id }); //pega o indice do caro editado
-        this.lista.splice(indice, 1);
-
-        Swal.fire({
-          title: "Registro apagado!",
-          icon: "success"
+        this.carroService.delete(carro.id).subscribe({ //Subscribe espera uma resposta
+          next: mensagem => { //Quando back retornar o que se espera com sucesso
+            Swal.fire({
+              title: mensagem,
+              icon: "success"
+            });
+            this.listAll(); // CHama a listALl pra atualizar a tela
+          }, error(err) { //Quando retornar qualquer erro
+            Swal.fire({
+              title: 'Ocoreu um erro',
+              icon: "error"
+            });
+          }
         });
+
       }
     });
   }
@@ -88,11 +86,11 @@ export class CarroslistComponent {
 
   retornoDetalhe(carro: Carro) {
 
-    if(carro.id>0){ //Retorna o objeto par ao indice da lista, em caso de edição
+    if (carro.id > 0) { //Retorna o objeto par ao indice da lista, em caso de edição
       let indice = this.lista.findIndex(x => { return x.id == carro.id }); //pega o indice do caro editado
       this.lista[indice] = carro;
-    }else{ // Se for car novo , somene posta na lsita
-      carro.id =55;
+    } else { // Se for car novo , somene posta na lsita
+      carro.id = 55;
       this.lista.push(carro);
     }
 
