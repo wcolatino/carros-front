@@ -16,9 +16,26 @@
                                 <label mdbLabel class="form-label" for="form12">Nome:</label>
                             </mdb-form-control>
                             <br>
-
-                            <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init
-                                (click)="save()">Salvar</button>
+                            <div>
+                                @if (carro.marca) {
+                                    <div>
+                                        <span class="text-primary">Marca: {{carro.marca.nome}}</span>
+                                        <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init (click)="save()">
+                                            Trocar Marca
+                                        </button>
+                                    </div>
+                                } @else {
+                                    <div>
+                                        <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init (click)="buscarMarca()">
+                                            Buscar Marca
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                            <br>
+                            <button type="button" class="btn btn-primary btn-rounded" data-mdb-ripple-init (click)="save()">
+                                Salvar
+                            </button>
                         </div>
 
                     </div>
@@ -27,3 +44,14 @@
         </div>
     </div>
 </div>
+
+<!-- Abre a modal dentro do marca details-->
+    <ng-template #modalMarcas>
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cadastro</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modalRef.close()"></button>
+    </div>
+    <div class="modal-body">
+         <app-marcaslist> </app-marcaslist> <!-- Event Binding - pega o retorno do @Output - objetica trazer qual merca selecionada pelo usuário na tabela-->
+    </div>
+    </ng-template>

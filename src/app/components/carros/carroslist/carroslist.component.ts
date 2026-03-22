@@ -70,7 +70,7 @@ export class CarroslistComponent {
             });
           }
         });
-
+        this.carroService.listAll();
       }
     });
   }
@@ -78,6 +78,7 @@ export class CarroslistComponent {
   new() {
     this.carroEdit = new Carro(0, "");
     this.modalRef = this.modalService.open(this.modalCaroDetalhe); //abre a janela e guarda a referência no modalRef para poder tabalhar com ela
+    this.carroService.listAll();
   }
 
   edit(carro: Carro) {
@@ -86,7 +87,7 @@ export class CarroslistComponent {
   }
 
   retornoDetalhe(carro: Carro) {
-    this.listAll();
+    this.listAll(); //Lista de novo os carros no banco, após editar ou salvar;
     this.modalRef.close(); //fecha a modal
   }
 
